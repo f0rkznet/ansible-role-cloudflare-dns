@@ -1,0 +1,16 @@
+---
+cloudflare_api_email:
+cloudflare_api_key:
+root_zones: []
+#   - foobar.net
+
+public_zones: []
+#   - record: www
+#     zone: foobar.net
+
+custom_zones: []
+  # - record: node00.sub.foobar.net
+  #   zone: foobar.net
+  #   proxied: no
+  #   type: A
+  #   value: 10.10.10.10

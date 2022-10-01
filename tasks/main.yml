@@ -1,0 +1,56 @@
+---
+
+- name: Get my public IP
+  uri:
+    url: https://wtfismyip.com/text
+    return_content: yes
+  register: ip_reply
+
+- name: Create root domains
+  community.general.cloudflare_dns:
+    zone: "{{ item }}"
+    proxied: yes
+    record: root
+    type: A
+    value: "{{ ip_reply.content }}"
+    account_email: "{{ cloudflare_account_email }}"
+    account_api_key : "{{ cloudflare_account_api_key }}"
+  with_items: "{{ root_zones }}"
+  when: root_zones|length > 0
+
+- name: Create tld domain
+  community.general.cloudflare_dns:
+    zone: "{{ item }}"
+    proxied: yes
+    record: "@"
+    type: CNAME
+    value: "root.{{ item }}"
+    account_email: "{{ cloudflare_account_email }}"
+    account_api_key : "{{ cloudflare_account_api_key }}"
+  with_items: "{{ root_zones }}"
+  when: root_zones|length > 0
+
+- name: Create public domains
+  community.general.cloudflare_dns:
+    zone: "{{ item.zone }}"
+    proxied: yes
+    record: "{{ item.record }}"
+    type: CNAME
+    value: "@"
+    account_email: "{{ cloudflare_account_email }}"
+    account_api_key : "{{ cloudflare_account_api_key }}"
+  with_items: "{{ public_zones }}"
+  when: public_zones|length > 0
+
+- name: Create custom domains
+  community.general.cloudflare_dns:
+    zone: "{{ item.zone }}"
+    proxied: "{{ item.proxied }}"
+    record: "{{ item.record }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    account_email: "{{ cloudflare_account_email }}"
+    account_api_key : "{{ cloudflare_account_api_key }}"
+  with_items: "{{ custom_zones }}"
+  when: custom_zones|length > 0
+
