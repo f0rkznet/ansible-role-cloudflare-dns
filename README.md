@@ -18,8 +18,8 @@ Configure your API credentials:
 
 ```yaml
 ---
-cloudflare_api_email: foo@bar.net
-cloudflare_api_key: some-api-key-is-here
+cloudflare_account_email: foo@bar.net
+cloudflare_account_api_key: some-api-key-thing-here
 ```
 
 Configure your zone or zones:
